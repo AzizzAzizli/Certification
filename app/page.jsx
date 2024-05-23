@@ -10,6 +10,7 @@ import Header from "@/shared/components/header";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
+import { containsNumber } from "@/shared/utils";
 
 let certificates = ref(db, "certificates");
 
@@ -42,9 +43,21 @@ export default function Home() {
 
     // console.log(value);
 
+
     let valueForSearch = value.split(" ");
 
     if (valueForSearch.length === 1) {
+
+      if (containsNumber(value)) {
+        let result = certificatesData.filter((item) => {
+          return item.serialNumber.toLowerCase() === value.toLowerCase();
+        });
+  
+        setResultData(result);
+
+        return
+      }
+
       let inputName = valueForSearch[0];
 
       let result = certificatesData.filter(
@@ -70,10 +83,13 @@ export default function Home() {
 
     inputRef.current.value = "";
   }
+
+
   function renderForKeyDown(e) {
     // console.log(e);
     if (e.key === "Enter") {
       renderCertificates();
+      inputRef.current.value = "";
     }
   }
 
@@ -85,7 +101,7 @@ export default function Home() {
 
   return (
     <body style={{ backgroundColor: "#617EFF" }} className=" min-h-screen  ">
-      <ToastContainer/>
+      <ToastContainer />
       {/* Header */}
       <Header />
       {/* Main */}
@@ -124,14 +140,15 @@ export default function Home() {
 
         {/* Certificates */}
 
-        <div className="flex flex-wrap mt-20 gap-4 justify-center">
+        <div className="flex flex-wrap mt-20 gap-4 justify-center px-5">
           {resultData.map((item) => {
             return (
               <Image
+                
                 key={item.serialNumber}
                 width={700}
-                height={0}
-                className=""
+                height={700}
+                className="h-auto"
                 src={item.cetificateImg}
                 alt={item.name + " " + item.surname + "-" + "certificate"}
               />
