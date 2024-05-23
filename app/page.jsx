@@ -128,6 +128,7 @@ export default function Home() {
           {resultData.map((item) => {
             return (
               <Image
+                key={item.serialNumber}
                 width={700}
                 height={0}
                 className=""
