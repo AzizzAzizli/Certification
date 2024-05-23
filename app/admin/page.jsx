@@ -1,18 +1,16 @@
 "use client";
 
-import { Button } from "@/shared/components/button";
-// import exampleCertifikate from "../../public/certificateExample.png";
-import Header from "@/shared/components/header";
-import { Input } from "@/shared/components/input";
-import { faFolder } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ref as reff, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getDatabase, ref, set, push, onValue } from "firebase/database";
-
-// import Image from "next/image";
-import React, { useRef, useState } from "react";
+// import exampleCertifikate from "../../public/certificateExample.png";
 import { db, fileStorage } from "@/shared/services/firebaseConfig";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFolder } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer, toast } from "react-toastify";
+import { Button } from "@/shared/components/button";
+import { Input } from "@/shared/components/input";
+import React, { useRef, useState } from "react";
+import Header from "@/shared/components/header";
 import { uppercase } from "@/shared/utils";
 
 const Admin = () => {

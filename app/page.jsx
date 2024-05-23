@@ -1,18 +1,20 @@
 "use client";
 
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import exampleCertifikate from "../public/certificateExample.png";
+// import exampleCertifikate from "../public/certificateExample.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ToastContainer, toast } from "react-toastify";
 import { db } from "@/shared/services/firebaseConfig";
+import { useEffect, useRef, useState } from "react";
 import { Input } from "@/shared/components/input";
 import { onValue, ref } from "firebase/database";
-import Header from "@/shared/components/header";
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { ToastContainer, toast } from "react-toastify";
 import { containsNumber } from "@/shared/utils";
+import Header from "@/shared/components/header";
+import Image from "next/image";
+
 
 let certificates = ref(db, "certificates");
+
 
 export default function Home() {
   const inputRef = useRef(null);
@@ -34,7 +36,7 @@ export default function Home() {
   }
 
   function renderCertificates() {
-    if (!inputRef.current.value) {
+    if (!inputRef.current.value.trim()) {
       toast.error("Please fill the input");
       return;
     }
@@ -43,19 +45,21 @@ export default function Home() {
 
     // console.log(value);
 
-
     let valueForSearch = value.split(" ");
 
     if (valueForSearch.length === 1) {
-
       if (containsNumber(value)) {
         let result = certificatesData.filter((item) => {
           return item.serialNumber.toLowerCase() === value.toLowerCase();
         });
-  
+        // console.log(result);
+        if (result.length === 0) {
+          toast.error("Data not found");
+          return;
+        }
         setResultData(result);
 
-        return
+        return;
       }
 
       let inputName = valueForSearch[0];
@@ -63,7 +67,12 @@ export default function Home() {
       let result = certificatesData.filter(
         (item) => item.name.toLowerCase() === inputName.toLowerCase()
       );
+      // console.log(result);
 
+      if (result.length === 0) {
+        toast.error("Data not found");
+        return;
+      }
       setResultData(result);
     } else if (valueForSearch.length === 2) {
       let inputName = valueForSearch[0];
@@ -76,6 +85,11 @@ export default function Home() {
           item.surname.toLowerCase() === inputSurname.toLowerCase()
         );
       });
+      if (result.length === 0) {
+        toast.error("Data not found");
+        return;
+      }
+      // console.log(result);
 
       setResultData(result);
       // console.log(result);
@@ -83,7 +97,6 @@ export default function Home() {
 
     inputRef.current.value = "";
   }
-
 
   function renderForKeyDown(e) {
     // console.log(e);
@@ -144,7 +157,6 @@ export default function Home() {
           {resultData.map((item) => {
             return (
               <Image
-                
                 key={item.serialNumber}
                 width={700}
                 height={700}
