@@ -12,8 +12,6 @@ const Header = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  console.log(pathname);
-
   function logout() {
     localStorage.removeItem("admin");
     toast.warning("You have been logged out.");
@@ -49,28 +47,30 @@ const Header = () => {
             alt="asoiu-logo"
           />
         </div>
-        <div className="flex gap-2 items-center">
-          <div>
-            <Button
-              onClick={changePage}
-              className={
-                "bg-gray-500 rounded h-auto text-xl px-3 py-1 text-white font-medium font-sans"
-              }
-            >
-              {pathname === "/admin" ? "Search" : "Admin"}
-            </Button>
+        {pathname !== "/" && (
+          <div className="flex gap-2 items-center">
+            <div>
+              <Button
+                onClick={changePage}
+                className={
+                  "bg-gray-500 rounded h-auto text-xl px-3 py-1 text-white font-medium font-sans"
+                }
+              >
+                {pathname === "/admin" ? "Search" : "Admin"}
+              </Button>
+            </div>
+            <div>
+              <Button
+                onClick={logout}
+                className={
+                  "bg-gray-500 rounded h-auto text-xl px-3 py-1 text-white font-medium font-sans"
+                }
+              >
+                Log out
+              </Button>
+            </div>
           </div>
-          <div>
-            <Button
-              onClick={logout}
-              className={
-                "bg-gray-500 rounded h-auto text-xl px-3 py-1 text-white font-medium font-sans"
-              }
-            >
-              Log out
-            </Button>
-          </div>
-        </div>
+        )}
       </div>
     </header>
   );

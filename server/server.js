@@ -6,7 +6,8 @@ const Admin = require("./models/admin");
 
 const app = express();
 
-const DbUrl = "mongodb+srv://asoiu1920:azii1920asoiu@myprojects.gfu2fly.mongodb.net/asoiu-certificates?retryWrites=true&w=majority&appName=MyProjects";
+// const DbUrl = "mongodb+srv://asoiu1920:azii1920asoiu@myprojects.gfu2fly.mongodb.net/asoiu-certificates?retryWrites=true&w=majority&appName=MyProjects";
+const DbUrl ='mongodb://localhost:27017/ASOİU-Certificates'
 
 mongoose.connect(DbUrl)
     .then(() => console.log("Connected to MongoDB"))
