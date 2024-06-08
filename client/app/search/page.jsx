@@ -10,7 +10,7 @@ import Header from "@/shared/components/header";
 import Image from "next/image";
 import { getData } from "@/shared/services/methods";
 import { useRouter } from "next/navigation";
-import 'react-toastify/dist/ReactToastify.css'; // Bu satırı ekleyin
+import "react-toastify/dist/ReactToastify.css"; // Bu satırı ekleyin
 
 export default function Home() {
   const [inputValue, setInputValue] = useState("");
@@ -22,9 +22,9 @@ export default function Home() {
     try {
       const adminData = JSON.parse(localStorage.getItem("admin")) || {};
       if (Object.values(adminData).length === 0) {
-        toast.error("You are not admin", {
+        toast?.error("You are not admin", {
           toastId: `admin-toast`,
-        autoClose:1500,
+          autoClose: 1500,
         });
         setTimeout(() => {
           router.push("/");
@@ -52,9 +52,9 @@ export default function Home() {
 
   function renderCertificates() {
     if (!inputValue.trim()) {
-      toast.error("Please fill the input", {
+      toast?.error("Please fill the input", {
         toastId: `search-button-toast`,
-      autoClose:1500,
+        autoClose: 1500,
       });
       return;
     }
@@ -83,9 +83,9 @@ export default function Home() {
     }
 
     if (result.length === 0) {
-      toast.error("Data not found", {
+      toast?.error("Data not found", {
         toastId: `search-button-toast`,
-      autoClose:1500,
+        autoClose: 1500,
       });
     } else {
       setResultData(result);
@@ -102,7 +102,7 @@ export default function Home() {
 
   return (
     <div style={{ backgroundColor: "#617EFF" }} className=" min-h-screen  ">
-      <ToastContainer stacked />
+      {/* <ToastContainer stacked limit={1} /> */}
       <Header />
       <main>
         <div className=" flex justify-center mt-12">

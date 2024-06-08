@@ -34,7 +34,7 @@ const Header = () => {
   return (
     <header>
       <ToastContainer />
-      <div className=" flex justify-between  py-3 px-5">
+      <div className="  flex sm:flex-row  flex-col justify-between  py-3 px-5 ">
         <div className="flex items-center gap-10 ">
           <h1 className="text-5xl sm:text-7xl text-main-text-color font-serif ">
             ASOIU
@@ -48,7 +48,7 @@ const Header = () => {
           />
         </div>
         {pathname !== "/" && (
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center sm:mt-0 mt-4 justify-center">
             <div>
               <Button
                 onClick={changePage}

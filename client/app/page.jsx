@@ -30,7 +30,7 @@ export default function Home() {
     const inputValues = Object.values(formData);
 
     if (inputValues.some((item) => !item)) {
-      toast.error("Please fill the inputs",{
+      toast?.error("Please fill the inputs",{
         toastId: `login-button-toast`,
       autoClose:1500,
       });
@@ -40,21 +40,21 @@ export default function Home() {
       admin?.username !== formData.username &&
       admin?.password !== formData.password
     ) {
-      toast.error("Username and Password are incorrect",{
+      toast?.error("Username and Password are incorrect",{
         toastId: `login-button-toast`,
       autoClose:1500,
       });
       return;
     }
     if (admin?.username !== formData.username) {
-      toast.error("Username is incorrect",{
+      toast?.error("Username is incorrect",{
         toastId: `login-button-toast`,
       autoClose:1500,
       });
       return;
     }
     if (admin?.password !== formData.password) {
-      toast.error("Password is incorrect",{
+      toast?.error("Password is incorrect",{
         toastId: `login-button-toast`,
       autoClose:1500,
       });
@@ -65,7 +65,7 @@ export default function Home() {
       router.push("/search");
     }, 1000);
     localStorage.setItem("admin", JSON.stringify(admin));
-    toast.success("You have successfully logged in!",{
+    toast?.success("You have successfully logged in!",{
       toastId: `login-button-toast`,
     autoClose:1500,
     });
@@ -80,13 +80,19 @@ export default function Home() {
 
   useEffect(() => {
     getAdminData();
+    const adminData = JSON.parse(localStorage.getItem("admin"));
+      if (adminData ) {
+        router.push("/search");
+        return
+      }
+
   }, []);
 
   // console.log(formData);
 
   return (
     <body style={{ backgroundColor: "#617EFF" }} className=" min-h-screen  ">
-      <ToastContainer stacked />
+      <ToastContainer stacked  limit={1}/>
       {/* Header */}
       <Header />
       {/* Main */}

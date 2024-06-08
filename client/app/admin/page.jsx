@@ -27,7 +27,7 @@ const Admin = () => {
     try {
       const adminData = JSON.parse(localStorage.getItem("admin")) || {};
       if (!adminData || Object.values(adminData).length === 0) {
-        toast.error("You are not admin", {
+        toast?.error("You are not admin", {
           toastId: `admin-toast`,
           autoClose: 1500,
         });
@@ -56,10 +56,11 @@ const Admin = () => {
 
   function saveButton() {
     if (!Object.values(formData).every((item) => item) || !imgUrl) {
-      toast.error("Please fill all the inputs", {
+      toast?.error("Please fill all the inputs", {
         toastId: `save-button-toast`,
         autoClose: 1500,
       });
+      // alert("Please fill all the inputs")
       return;
     }
     formData.cetificateImg = imgUrl;
@@ -69,7 +70,7 @@ const Admin = () => {
         // console.log(data);
         if (data.status === 201) {
           setFormData({ name: "", surname: "", serialNumber: "" });
-          toast.success("Certificate added successfully", {
+          toast?.success("Certificate added successfully", {
             toastId: `save-button-toast`,
             autoClose: 1500,
           });
@@ -78,7 +79,7 @@ const Admin = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error adding certificate", {
+        toast?.error("Error adding certificate", {
           toastId: `save-button-toast`,
           autoClose: 1500,
         });
@@ -87,7 +88,8 @@ const Admin = () => {
 
   return (
     <>
-      <ToastContainer stacked limit={1} />
+      {/* <ToastContainer stacked limit={1} /> */}
+
       <div style={{ backgroundColor: "#617EFF" }} className=" min-h-screen ">
         {/* Header */}
         <Header />
