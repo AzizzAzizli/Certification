@@ -139,7 +139,7 @@ export default function Home() {
 
         <div className="flex flex-wrap mt-20 gap-4 justify-center px-5">
           {resultData.map((item) => (
-            <Image
+            <img
               key={item._id}
               width={350}
               height={350}
