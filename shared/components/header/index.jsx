@@ -24,7 +24,7 @@ const Header = () => {
     if (pathname === "/") {
       router.push("/admin");
       return;
-    } else if (pathname === "/admin/new") {
+    } else if (pathname === "/admin/new" || pathname === "/admin") {
       router.push("/");
       return;
     }
@@ -35,7 +35,10 @@ const Header = () => {
     <header>
       <ToastContainer />
       <div className="  flex sm:flex-row  flex-col justify-between  py-3 px-5 ">
-        <div className="flex items-center gap-10 ">
+        <div
+          className="flex items-center gap-10  cursor-pointer"
+          onClick={() => router.push("/")}
+        >
           <Image
             className="w-[70px] sm:w-[90px]"
             height={150}
@@ -43,38 +46,30 @@ const Header = () => {
             src={logo}
             alt="asoiu-logo"
           />
-           <h1 className="text-4xl sm:text-6xl text-main-text-color font-serif ">
+          <h1 className="text-4xl sm:text-6xl text-main-text-color font-serif ">
             ASOIU
           </h1>
         </div>
-        {pathname !== "/admin" && (
-          <div className="flex gap-2 items-center sm:mt-0 mt-4 justify-center">
-            <div>
-              <Button
-                onClick={changePage}
-                className={
-                  "bg-gray-500 rounded h-auto text-xl px-3 py-1 text-white font-medium font-sans"
-                }
-              >
-                {pathname === "/admin/new" ? "Search" : "Add new"}
-              </Button>
-            </div>
-            {
-              pathname === "/admin/new" &&
-              <div>
-              <Button
-                onClick={logout}
-                className={
-                  "bg-gray-500 rounded h-auto text-xl px-3 py-1 text-white font-medium font-sans"
-                }
-              >
-                Log out
-              </Button>
-            </div>
-          }  
-          
-          </div>
-        )}
+        <div className="flex gap-2 items-center sm:mt-0 mt-4 justify-center">
+          <Button
+            onClick={changePage}
+            className="bg-gray-500 rounded h-auto text-xl px-3 py-1 text-white font-medium font-sans"
+          >
+            {pathname === "/admin"
+              ? "Search"
+              : pathname === "/admin/new"
+              ? "Search"
+              : "Add new"}
+          </Button>
+          {pathname === "/admin/new" && (
+            <Button
+              onClick={logout}
+              className="bg-gray-500 rounded h-auto text-xl px-3 py-1 text-white font-medium font-sans"
+            >
+              Log out
+            </Button>
+          )}
+        </div>
       </div>
     </header>
   );
