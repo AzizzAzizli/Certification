@@ -25,7 +25,7 @@ const Header = () => {
       router.push("/admin");
       return;
     } else if (pathname === "/admin/new") {
-      router.push("/search");
+      router.push("/");
       return;
     }
     return;
