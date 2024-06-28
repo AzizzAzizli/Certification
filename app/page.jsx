@@ -1,151 +1,139 @@
 "use client";
 
-// import exampleCertifikate from "../public/certificateExample.png";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ToastContainer, toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { Input } from "@/shared/components/input";
+import { containsNumber } from "@/shared/utils";
 import Header from "@/shared/components/header";
-import { getAdmin } from "@/shared/services/methods";
-import { Button } from "@/shared/components/button";
+import Image from "next/image";
+import { getData } from "@/shared/services/methods";
 import { useRouter } from "next/navigation";
+import "react-toastify/dist/ReactToastify.css"; // Bu satırı ekleyin
 
 export default function Home() {
+  const [inputValue, setInputValue] = useState("");
+  const [certificatesData, setCertificateData] = useState([]);
+  const [resultData, setResultData] = useState([]);
   const router = useRouter();
 
-  const [admin, setAdmin] = useState();
-
-  const [formData, setFormData] = useState({ username: "", password: "" });
-
-  function getAdminData() {
-    try {
-      getAdmin().then((result) => {
-        console.log(result);
-        setAdmin(result.result?.[0]);
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  }
-  function login() {
-    const inputValues = Object.values(formData);
-
-    if (inputValues.some((item) => !item)) {
-      toast?.error("Please fill the inputs",{
-        toastId: `login-button-toast`,
-      autoClose:1500,
-      });
-      return;
-    }
-    if (
-      admin?.username !== formData.username &&
-      admin?.password !== formData.password
-    ) {
-      toast?.error("Username and Password are incorrect",{
-        toastId: `login-button-toast`,
-      autoClose:1500,
-      });
-      return;
-    }
-    if (admin?.username !== formData.username) {
-      toast?.error("Username is incorrect",{
-        toastId: `login-button-toast`,
-      autoClose:1500,
-      });
-      return;
-    }
-    if (admin?.password !== formData.password) {
-      toast?.error("Password is incorrect",{
-        toastId: `login-button-toast`,
-      autoClose:1500,
-      });
-      return;
-    }
-
-    setTimeout(() => {
-      router.push("/search");
-    }, 1000);
-    localStorage.setItem("admin", JSON.stringify(admin.username));
-    toast?.success("You have successfully logged in!",{
-      toastId: `login-button-toast`,
-    autoClose:1500,
-    });
-
-    return;
-  }
-
-  function handleInputs(e) {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  }
-
   useEffect(() => {
-    getAdminData();
-    const adminData = JSON.parse(localStorage.getItem("admin"));
-      if (adminData ) {
-        router.push("/search");
-        return
-      }
-
+    getCertificates();
   }, []);
 
-  // console.log(formData);
+  async function getCertificates() {
+    try {
+      const data = await getData();
+      if (data.status === 200) {
+        setCertificateData(data.result);
+      } else {
+        console.error("Failed to fetch certificates:", data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  function renderCertificates() {
+    if (!inputValue.trim()) {
+      toast?.error("Please fill the input", {
+        toastId: `search-button-toast`,
+        autoClose: 1500,
+      });
+      return;
+    }
+
+    let valueForSearch = inputValue.split(" ");
+
+    let result = [];
+
+    if (valueForSearch.length === 1) {
+      if (containsNumber(inputValue)) {
+        result = certificatesData.filter(
+          (item) => item.serialNumber.toLowerCase() === inputValue.toLowerCase()
+        );
+      } else {
+        result = certificatesData.filter(
+          (item) => item.name.toLowerCase() === inputValue.toLowerCase()
+        );
+      }
+    } else if (valueForSearch.length === 2) {
+      const [inputName, inputSurname] = valueForSearch;
+      result = certificatesData.filter(
+        (item) =>
+          item.name.toLowerCase() === inputName.toLowerCase() &&
+          item.surname.toLowerCase() === inputSurname.toLowerCase()
+      );
+    }
+
+    if (result.length === 0) {
+      toast?.error("Data not found", {
+        toastId: `search-button-toast`,
+        autoClose: 1500,
+      });
+    } else {
+      setResultData(result);
+    }
+
+    setInputValue("");
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === "Enter") {
+      renderCertificates();
+    }
+  }
 
   return (
-    <body style={{ backgroundColor: "#617EFF" }} className=" min-h-screen  ">
-      <ToastContainer stacked  limit={1}/>
-      {/* Header */}
+    <div style={{ backgroundColor: "#617EFF" }} className=" min-h-screen  ">
+      {/* <ToastContainer stacked limit={1} /> */}
       <Header />
-      {/* Main */}
-
       <main>
-        {/* Form */}
-        <div className=" flex justify-center mt-10  w-full px-7 mb-10">
-          <div className=" bg-white py-10 px-7 w-full sm:w-2/3 lg:w-1/3  rounded-tr-2xl  rounded-bl-2xl">
-            <p className=" font-sans text-gray-500 text-3xl font-medium  mb-7 text-center">
-              Login
-            </p>
-            <div className=" flex flex-col">
-              <div className="flex flex-col gap-2">
-                <label className="font-sans text-gray-500 text-xl font-medium">
-                  User name
-                </label>
-                <Input
-                  value={formData.username}
-                  name={"username"}
-                  onChange={handleInputs}
-                  className={
-                    "h-10 outline-none border-solid border border-gray-700 rounded-lg py-1 px-2 text-2xl font-medium font-sans text-gray-900 "
-                  }
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label className="font-sans text-gray-500 text-xl font-medium">
-                  Password
-                </label>
-                <Input
-                  type="password"
-                  value={formData.password}
-                  name={"password"}
-                  onChange={handleInputs}
-                  className={
-                    "h-10 outline-none border-solid border border-gray-700 rounded-lg py-1 px-2 text-2xl font-medium text-gray-900 "
-                  }
-                />
-              </div>
+        <div className=" flex justify-center mt-12">
+          <p className="text-3xl text-center  text-gray-700 font-bold font-sans">
+            Search certificates
+          </p>
+        </div>
+
+        <div className="flex justify-center   mt-16 px-12 md:px-0  ">
+          <div className=" w-full  md:w-1/2  bg-white flex gap-1 rounded-3xl overflow-hidden  pr-4   ">
+            <div className="flex items-center pl-3   t font-medium  ">
+              <p className="text-xl text-main-color  border-solid border-r-2 border-r-gray-600 pr-3 font-sans  ">
+                Search
+              </p>
             </div>
-            <div className="mt-7">
-              <Button
-                onClick={login}
-                className={
-                  "bg-blue-700 w-full h-10 rounded-md text-white font-sans text-xl"
-                }
-              >
-                Login
-              </Button>
+            <Input
+              placeholder={"Name Surname or id"}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className={
+                " text-xl font-semibold w-full font-sans h-14 pr-7 pl-3 outline-none"
+              }
+            />
+            <div className="flex items-center">
+              <FontAwesomeIcon
+                onClick={renderCertificates}
+                className="text-2xl text-main-color cursor-pointer"
+                icon={faMagnifyingGlass}
+              />
             </div>
           </div>
         </div>
+
+        <div className="flex flex-wrap mt-20 gap-4 justify-center px-5">
+          {resultData.map((item) => (
+            <img
+              key={item._id}
+              width={350}
+              height={350}
+              src={item.cetificateImg}
+              alt={`${item.name} ${item.surname} - certificate`}
+            />
+          ))}
+        </div>
       </main>
-    </body>
+    </div>
   );
 }

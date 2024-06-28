@@ -13,7 +13,7 @@ const Header = () => {
   const router = useRouter();
 
   function logout() {
-    localStorage.removeItem("admin");
+    sessionStorage.removeItem("admin");
     toast.warning("You have been logged out.");
     setTimeout(() => {
       router.push("/");
@@ -21,11 +21,11 @@ const Header = () => {
   }
 
   function changePage() {
-    if (pathname === "/admin") {
-      router.push("/search");
-      return;
-    } else if (pathname === "/search") {
+    if (pathname === "/") {
       router.push("/admin");
+      return;
+    } else if (pathname === "/admin/new") {
+      router.push("/search");
       return;
     }
     return;
@@ -47,7 +47,7 @@ const Header = () => {
             ASOIU
           </h1>
         </div>
-        {pathname !== "/" && (
+        {pathname !== "/admin" && (
           <div className="flex gap-2 items-center sm:mt-0 mt-4 justify-center">
             <div>
               <Button
@@ -56,10 +56,12 @@ const Header = () => {
                   "bg-gray-500 rounded h-auto text-xl px-3 py-1 text-white font-medium font-sans"
                 }
               >
-                {pathname === "/admin" ? "Search" : "Admin"}
+                {pathname === "/admin/new" ? "Search" : "Add new"}
               </Button>
             </div>
-            <div>
+            {
+              pathname === "/admin/new" &&
+              <div>
               <Button
                 onClick={logout}
                 className={
@@ -69,6 +71,8 @@ const Header = () => {
                 Log out
               </Button>
             </div>
+          }  
+          
           </div>
         )}
       </div>
