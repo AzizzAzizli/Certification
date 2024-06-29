@@ -22,6 +22,11 @@ const Header = () => {
 
   function changePage() {
     if (pathname === "/") {
+      const admin = sessionStorage.getItem("admin");
+      if (admin) {
+        router.push("/admin/new");
+        return;
+      }
       router.push("/admin");
       return;
     } else if (pathname === "/admin/new" || pathname === "/admin") {
